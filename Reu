@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reunión FLL - Robótica</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .header::before {
+            content: '🤖';
+            font-size: 60px;
+            position: absolute;
+            top: 20px;
+            left: 30px;
+            opacity: 0.3;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .agenda-item {
+            margin-bottom: 30px;
+            border-left: 5px solid #667eea;
+            padding-left: 20px;
+            background: #f8f9fa;
+            border-radius: 0 10px 10px 0;
+            padding: 20px;
+            position: relative;
+        }
+        
+        .agenda-item::before {
+            position: absolute;
+            left: -15px;
+            top: 20px;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #667eea;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        
+        .agenda-item:nth-child(1)::before { content: '1'; }
+        .agenda-item:nth-child(2)::before { content: '2'; }
+        .agenda-item:nth-child(3)::before { content: '3'; }
+        .agenda-item:nth-child(4)::before { content: '4'; }
+        .agenda-item:nth-child(5)::before { content: '5'; }
+        .agenda-item:nth-child(6)::before { content: '6'; }
+        
+        .agenda-title {
+            font-size: 1.4em;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .icon {
+            font-size: 1.5em;
+        }
+        
+        .cost-highlight {
+            background: linear-gradient(135deg, #26de81, #20bf6b);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 1.3em;
+            font-weight: bold;
+            margin: 15px 0;
+            box-shadow: 0 5px 15px rgba(38, 222, 129, 0.3);
+        }
+        
+        .timeline-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+        
+        .timeline-table th {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: bold;
+        }
+        
+        .timeline-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .timeline-table tr:hover {
+            background: #f8f9fa;
+        }
+        
+        .module-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin: 15px 0;
+        }
+        
+        .module-card {
+            background: linear-gradient(135deg, #ffeaa7, #fdcb6e);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            font-weight: bold;
+            color: #2d3436;
+            box-shadow: 0 3px 10px rgba(253, 203, 110, 0.3);
+            transition: transform 0.3s ease;
+        }
+        
+        .module-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .committee-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 15px 0;
+        }
+        
+        .committee-card {
+            background: linear-gradient(135deg, #a29bfe, #6c5ce7);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            font-weight: bold;
+            box-shadow: 0 3px 10px rgba(108, 92, 231, 0.3);
+            transition: transform 0.3s ease;
+        }
+        
+        .committee-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .footer {
+            background: #2d3436;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .print-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #00b894;
+            color: white;
+            border: none;
+            padding: 15px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(0, 184, 148, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .print-btn:hover {
+            background: #00a085;
+            transform: translateY(-2px);
+        }
+        
+        @media print {
+            body { background: white; padding: 0; }
+            .container { box-shadow: none; }
+            .print-btn { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <button class="print-btn" onclick="window.print()">🖨️ Imprimir PDF</button>
+    
+    <div class="container">
+        <div class="header">
+            <h1>FIRST LEGO League</h1>
+            <p>Reunión de Robótica - Plan de Formación 2024</p>
+        </div>
+        
+        <div class="content">
+            <div class="agenda-item">
+                <div class="agenda-title">
+                    <span class="icon">🙏</span>
+                    Saludo y Oración
+                </div>
+                <p>Bienvenida a todos los participantes y momento de reflexión para comenzar nuestra reunión.</p>
+            </div>
+            
+            <div class="agenda-item">
+                <div class="agenda-title">
+                    <span class="icon">💰</span>
+                    Costos de Participación FLL
+                </div>
+                <div class="cost-highlight">
+                    $2.350.000 COP
+                </div>
+                <p><strong>Cronograma de entrega:</strong></p>
+                <ul style="margin: 10px 0; padding-left: 20px;">
+                    <li>Set de competencia: <strong>Finales de agosto</strong></li>
+                    <li>Eliminatoria regional: <strong>Noviembre 2024</strong></li>
+                </ul>
+            </div>
+            
+            <div class="agenda-item">
+                <div class="agenda-title">
+                    <span class="icon">📚</span>
+                    Plan de Formación en Robótica
+                </div>
+                <p><strong>Estado actual:</strong> Completados los módulos de Instrumentación y Modelación</p>
+                
+                <div class="module-list">
+                    <div class="module-card">✅ Instrumentación</div>
+                    <div class="module-card">✅ Modelación</div>
+                    <div class="module-card">🔄 Mecánica</div>
+                    <div class="module-card">⏳ Mecanismos Básicos</div>
+                    <div class="module-card">⏳ Mecanismos Especiales</div>
+                    <div class="module-card">⏳ Programación</div>
+                    <div class="module-card">⏳ Estrategias de Competencia</div>
+                    <div class="module-card">⏳ Investigación</div>
+                </div>
+                
+                <p style="margin-top: 15px;"><strong>Nota:</strong> Cada módulo incluye su respectiva certificación</p>
+            </div>
+            
+            <div class="agenda-item">
+                <div class="agenda-title">
+                    <span class="icon">📅</span>
+                    Calendario de Entrenamiento - Vacaciones
+                </div>
+                <table class="timeline-table">
+                    <thead>
+                        <tr>
+                            <th>Mes</th>
+                            <th>Fechas de Entrenamiento</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Junio</strong></td>
+                            <td>12, 13, 19, 20, 26, 27</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Julio</strong></td>
+                            <td>3, 10, 17, 24, 31</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Agosto</strong></td>
+                            <td>Martes 5 y 12</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="agenda-item">
+                <div class="agenda-title">
+                    <span class="icon">👥</span>
+                    Comités de Participación
+                </div>
+                <p>Se requiere la conformación de los siguientes comités:</p>
+                
+                <div class="committee-grid">
+                    <div class="committee-card">🍽️ Alimentación</div>
+                    <div class="committee-card">📝 Inscripción + Camisetas</div>
+                    <div class="committee-card">🚌 Transporte</div>
+                    <div class="committee-card">💡 Proyecto de Innovación</div>
+                    <div class="committee-card">🏆 Competencia</div>
+                </div>
+            </div>
+            
+            <div class="agenda-item">
+                <div class="agenda-title">
+                    <span class="icon">💡</span>
+                    Sugerencias de Mejora
+                </div>
+                <p>Espacio abierto para recibir ideas, propuestas y sugerencias de mejora por parte de los padres de familia y participantes del programa.</p>
+                <div style="border: 2px dashed #ddd; padding: 20px; margin: 15px 0; border-radius: 10px; background: #f9f9f9;">
+                    <p style="color: #666; font-style: italic;">Espacio para notas durante la reunión...</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>🤖 Programa de Robótica FLL - Desarrollando el futuro, un robot a la vez</p>
+        </div>
+    </div>
+</body>
+</html>
