@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Análisis Lectura Crítica ICFES Saber 11</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .header::before {
+            content: '📊';
+            font-size: 60px;
+            position: absolute;
+            top: 20px;
+            left: 30px;
+            opacity: 0.3;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .section {
+            margin-bottom: 40px;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .section-header {
+            padding: 20px;
+            font-size: 1.4em;
+            font-weight: bold;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .historicos { background: linear-gradient(135deg, #ff6b6b, #ee5a24); }
+        .tendencias { background: linear-gradient(135deg, #26de81, #20bf6b); }
+        .brechas { background: linear-gradient(135deg, #feca57, #ff9ff3); }
+        .ponderacion { background: linear-gradient(135deg, #a29bfe, #6c5ce7); }
+        .niveles { background: linear-gradient(135deg, #fd79a8, #e84393); }
+        .interpretacion { background: linear-gradient(135deg, #00b894, #00cec9); }
+        .benchmark { background: linear-gradient(135deg, #fdcb6e, #e17055); }
+        
+        .table-container {
+            background: white;
+            overflow-x: auto;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+        
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+            vertical-align: middle;
+        }
+        
+        th {
+            background: #f8f9fa;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .year-row {
+            transition: all 0.3s ease;
+        }
+        
+        .year-row:hover {
+            background: #f0f8ff;
+            transform: scale(1.02);
+        }
+        
+        .trend-icon {
+            font-size: 1.2em;
+            margin-right: 5px;
+        }
+        
+        .score {
+            font-weight: bold;
+            font-size: 1.1em;
+            color: #2c3e50;
+        }
+        
+        .excellent { color: #00b894; }
+        .good { color: #0984e3; }
+        .average { color: #fdcb6e; }
+        .needs-improvement { color: #e17055; }
+        
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: #ecf0f1;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 5px 0;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #74b9ff, #0984e3);
+            border-radius: 10px;
+            transition: width 0.8s ease;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            margin: 10px;
+            min-width: 150px;
+        }
+        
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            color: #636e72;
+            font-size: 0.9em;
+        }
+        
+        .flex-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .icon-large {
+            font-size: 2em;
+            margin-right: 10px;
+        }
+        
+        .badge {
+            background: #74b9ff;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+        
+        .comparison-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background: #f8f9fa;
+            margin: 5px 0;
+            border-radius: 8px;
+            border-left: 4px solid #74b9ff;
+        }
+        
+        .gap-indicator {
+            background: #e17055;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            .container {
+                margin: 0;
+                border-radius: 15px;
+            }
+            
+            .header {
+                padding: 20px 15px;
+            }
+            
+            .header::before {
+                display: none;
+            }
+            
+            .header h1 {
+                font-size: 1.8em;
+                margin-bottom: 5px;
+            }
+            
+            .header p {
+                font-size: 1em;
+            }
+            
+            .content {
+                padding: 15px;
+            }
+            
+            .section {
+                margin-bottom: 20px;
+            }
+            
+            .section-header {
+                padding: 15px;
+                font-size: 1.1em;
+                flex-direction: column;
+                text-align: center;
+                gap: 5px;
+            }
+            
+            .icon-large {
+                font-size: 1.5em;
+                margin: 0;
+            }
+            
+            .table-container {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                border-radius: 10px;
+            }
+            
+            table {
+                min-width: 100%;
+                font-size: 12px;
+            }
+            
+            th, td {
+                padding: 8px;
+                white-space: nowrap;
+            }
+            
+            .year-row:hover {
+                transform: none;
+            }
+            
+            .flex-container {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .stat-card {
+                width: 100%;
+                margin: 5px 0;
+                padding: 15px;
+            }
+            
+            .stat-number {
+                font-size: 1.5em;
+            }
+            
+            .comparison-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 5px;
+                padding: 8px;
+            }
+            
+            .chart-container {
+                height: 200px;
+                padding: 10px;
+                flex-wrap: wrap;
+            }
+            
+            .chart-bar {
+                min-width: 60px;
+                margin: 5px;
+            }
+            
+            .chart-label {
+                writing-mode: horizontal-tb;
+                text-orientation: mixed;
+                font-size: 0.7em;
+                text-align: center;
+            }
+            
+            .chart-value {
+                font-size: 0.8em;
+                padding: 3px;
+            }
+            
+            .progress-bar {
+                height: 15px;
+            }
+            
+            .score {
+                font-size: 1em;
+            }
+            
+            .badge {
+                font-size: 0.7em;
+                padding: 3px 6px;
+            }
+            
+            .gap-indicator {
+                font-size: 0.7em;
+                padding: 2px 6px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 1.5em;
+            }
+            
+            .header p {
+                font-size: 0.9em;
+            }
+            
+            .section-header {
+                font-size: 1em;
+                padding: 12px;
+            }
+            
+            table {
+                font-size: 11px;
+            }
+            
+            th, td {
+                padding: 6px;
+            }
+            
+            .stat-card {
+                padding: 12px;
+            }
+            
+            .stat-number {
+                font-size: 1.3em;
+            }
+            
+            .chart-container {
+                height: 150px;
+                padding: 8px;
+            }
+            
+            .chart-bar {
+                min-width: 40px;
+            }
+            
+            .chart-label {
+                font-size: 0.6em;
+            }
+            
+            .chart-value {
+                font-size: 0.7em;
+            }
+        }
+        
+        .chart-container {
+            width: 100%;
+            height: 300px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            display: flex;
+            align-items: end;
+            justify-content: space-around;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .chart-bar {
+            background: linear-gradient(to top, #74b9ff, #0984e3);
+            border-radius: 5px 5px 0 0;
+            min-width: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+        
+        .chart-bar:hover {
+            transform: scale(1.05);
+            background: linear-gradient(to top, #00b894, #26de81);
+        }
+        
+        .chart-label {
+            font-size: 0.8em;
+            color: #2c3e50;
+            margin-top: 10px;
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+        }
+        
+        .chart-value {
+            color: white;
+            font-weight: bold;
+            font-size: 0.9em;
+            padding: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📚 Análisis Lectura Crítica ICFES</h1>
+            <p>Datos Históricos 2014-2023 • Saber 11</p>
+        </div>
+        
+        <div class="content">
+            <!-- Datos Históricos -->
+            <div class="section">
+                <div class="section-header historicos">
+                    <span class="icon-large">📈</span>
+                    Evolución Histórica de Promedios (2014-2023)
+                </div>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>📅 Año</th>
+                                <th>📊 Puntaje</th>
+                                <th>📈 Tendencia</th>
+                                <th>🎯 Progreso Visual</th>
+                                <th>💡 Clasificación</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="year-row">
+                                <td><strong>2023</strong></td>
+                                <td class="score average">52.9</td>
+                                <td><span class="trend-icon">📈</span> +0.1</td>
+                                <td><div class="progress-bar"><div class="progress-fill" style="width: 52.9%"></div></div></td>
+                                <td><span class="badge">Promedio</span></td>
+                            </tr>
+                            <tr class="year-row">
+                                <td><strong>2022</strong></td>
+                                <td class="score average">52.8</td>
+                                <td><span class="trend-icon">📈</span> +0.5</td>
+                                <td><div class="progress-bar"><div class="progress-fill" style="width: 52.8%"></div></div></td>
+                                <td><span class="badge">Promedio</span></td>
+                            </tr>
+                            <tr class="year-row">
+                                <td><strong>2021</strong></td>
+                                <td class="score average">52.3</td>
+                                <td><span class="trend-icon">📈</span> +0.1</td>
+                                <td><div class="progress-bar"><div class="progress-fill" style="width: 52.3%"></div></div></td>
+                                <td><span class="badge">Promedio</span></td>
+                            </tr>
+                            <tr class="year-row">
+                                <td><strong>2020</strong></td>
+                                <td class="score average">52.2</td>
+                                <td><span class="trend-icon">📉</span> -0.0</td>
+                                <td><div class="progress-bar"><div class="progress-fill" style="width: 52.2%"></div></div></td>
+                                <td><span class="badge">Promedio</span></td>
+                            </tr>
+                            <tr class="year-row">
+                                <td><strong>2019</strong></td>
+                                <td class="score average">52.2</td>
+                                <td><span class="trend-icon">📉</span> -0.4</td>
+                                <td><div class="progress-bar"><div class="progress-fill" style="width: 52.2%"></div></div></td>
+                                <td><span class="badge">Promedio</span></td>
+                            </tr>
+                            <tr class="year-row">
+                                <td><strong>2018</strong></td>
+                                <td class="score average">52.6</td>
+                                <td><span class="trend-icon">📉</span> -0.6</td>
+                                <td><div class="progress-bar"><div class="progress-fill" style="width: 52.6%"></div></div></td>
+                                <td><span class="badge">Promedio</span></td>
+                            </tr>
+                            <tr class="year-row">
+                                <td><strong>2017</strong></td>
+                                <td class="score good">53.2</td>
+                                <td><span class="trend-icon">📈</span> +0.6</td>
+                                <td><div class="progress-bar"><div class="progress-fill" style="width: 53.2%"></div></div></td>
+                                <td><span class="badge">Sobre Prom</span></td>
+                            </tr>
+                            <tr class="year-row">
+                                <td><strong>2016</strong></td>
+                                <td class="score average">52.6</td>
+                                <td><span class="trend-icon">📈</span> +2.9</td>
+                                <td><div class="progress-bar"><div class="progress-fill" style="width: 52.6%"></div></div></td>
+                                <td><span class="badge">+ Mejora</span></td>
+                            </tr>
+                            <tr class="year-row">
+                                <td><strong>2015</strong></td>
+                                <td class="score needs-improvement">49.7</td>
+                                <td><span class="trend-icon">📉</span> -0.3</td>
+                                <td><div class="progress-bar"><div class="progress-fill" style="width: 49.7%"></div></div></td>
+                                <td><span class="badge">Bajo Prom</span></td>
+                            </tr>
+                            <tr class="year-row">
+                                <td><strong>2014</strong></td>
+                                <td class="score average">50.0</td>
+                                <td><span class="trend-icon">📊</span> Base</td>
+                                <td><div class="progress-bar"><div class="progress-fill" style="width: 50%"></div></div></td>
+                                <td><span class="badge">Base</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Tendencias Clave -->
+            <div class="section">
+                <div class="section-header tendencias">
+                    <span class="icon-large">🎯</span>
+                    Tendencias y Características Clave
+                </div>
+                <div class="table-container">
+                    <div class="flex-container">
+                        <div class="stat-card">
+                            <div class="stat-number excellent">📊</div>
+                            <div class="stat-label">Área Más Estable</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number good">51.8</div>
+                            <div class="stat-label">Promedio Década</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number excellent">🏆</div>
+                            <div class="stat-label">Rendimiento Consistente</div>
+                        </div>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>🔍 Aspecto</th>
+                                <th>📊 Descripción</th>
+                                <th>📈 Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>🎯 Estabilidad</strong></td>
+                                <td>Lectura crítica es la más estable de todas las áreas evaluadas</td>
+                                <td><span class="badge">Excelente</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>📈 Mejora Histórica</strong></td>
+                                <td>Mayor mejora de 49.7 (2015) a 52.6 (2016)</td>
+                                <td><span class="badge">+2.9 puntos</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>🔄 Consistencia</strong></td>
+                                <td>Mantiene rangos 52-53 puntos últimos años</td>
+                                <td><span class="badge">Estable</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Análisis por Brechas -->
+            <div class="section">
+                <div class="section-header brechas">
+                    <span class="icon-large">⚖️</span>
+                    Análisis de Brechas 2023
+                </div>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>🏫 Categoría</th>
+                                <th>📊 Grupo 1</th>
+                                <th>📊 Grupo 2</th>
+                                <th>📏 Brecha</th>
+                                <th>🎯 Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>🏢 Por Sector</strong></td>
+                                <td class="comparison-item">
+                                    <div>🏛️ No Oficiales</div>
+                                    <div class="score good">57.0</div>
+                                </td>
+                                <td class="comparison-item">
+                                    <div>🏫 Oficiales</div>
+                                    <div class="score average">51.8</div>
+                                </td>
+                                <td><span class="gap-indicator">5.2</span></td>
+                                <td><span class="badge">Menor brecha</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>👥 Por Género</strong></td>
+                                <td class="comparison-item">
+                                    <div>👨 Hombres</div>
+                                    <div class="score average">53.2</div>
+                                </td>
+                                <td class="comparison-item">
+                                    <div>👩 Mujeres</div>
+                                    <div class="score average">52.7</div>
+                                </td>
+                                <td><span class="gap-indicator">0.5</span></td>
+                                <td><span class="badge">Equitativo</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>🌍 Por Zona</strong></td>
+                                <td class="comparison-item">
+                                    <div>🏙️ Urbano</div>
+                                    <div class="score good">53.9</div>
+                                </td>
+                                <td class="comparison-item">
+                                    <div>🌾 Rural</div>
+                                    <div class="score needs-improvement">48.6</div>
+                                </td>
+                                <td><span class="gap-indicator">5.2</span></td>
+                                <td><span class="badge">Oportunidad</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Niveles de Desempeño -->
+            <div class="section">
+                <div class="section-header niveles">
+                    <span class="icon-large">🎖️</span>
+                    Distribución por Niveles de Desempeño 2023
+                </div>
+                <div class="table-container">
+                    <div class="chart-container">
+                        <div class="chart-bar" style="height: 120px;">
+                            <div class="chart-value">12.2%</div>
+                            <div class="chart-label">🏆 Nivel 4 (Avanzado)</div>
+                        </div>
+                        <div class="chart-bar" style="height: 230px;">
+                            <div class="chart-value">46.1%</div>
+                            <div class="chart-label">⭐ Nivel 3 (Satisfactorio)</div>
+                        </div>
+                        <div class="chart-bar" style="height: 187px;">
+                            <div class="chart-value">37.4%</div>
+                            <div class="chart-label">📝 Nivel 2 (Mínimo)</div>
+                        </div>
+                        <div class="chart-bar" style="height: 42px;">
+                            <div class="chart-value">4.2%</div>
+                            <div class="chart-label">❌ Nivel 1 (Insuficiente)</div>
+                        </div>
+                    </div>
+                    <div class="flex-container">
+                        <div class="stat-card">
+                            <div class="stat-number excellent">58.3%</div>
+                            <div class="stat-label">Niveles 3 y 4</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number needs-improvement">41.7%</div>
+                            <div class="stat-label">Niveles 1 y 2</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Benchmark de Rendimiento -->
+            <div class="section">
+                <div class="section-header benchmark">
+                    <span class="icon-large">🎯</span>
+                    Benchmark de Rendimiento
+                </div>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>🏆 Clasificación</th>
+                                <th>📊 Rango de Puntaje</th>
+                                <th>📈 Percentil</th>
+                                <th>🎯 Descripción</th>
+                                <th>💡 Oportunidad</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="excellent">
+                                <td><strong>🥇 Excelente</strong></td>
+                                <td class="score excellent">70+</td>
+                                <td>90%+</td>
+                                <td>Top 10%</td>
+                                <td><span class="badge">Becas</span></td>
+                            </tr>
+                            <tr class="good">
+                                <td><strong>🥈 Bueno</strong></td>
+                                <td class="score good">60-69</td>
+                                <td>75%+</td>
+                                <td>Top 25%</td>
+                                <td><span class="badge">Univ Top</span></td>
+                            </tr>
+                            <tr class="average">
+                                <td><strong>📊 Promedio</strong></td>
+                                <td class="score average">52.9</td>
+                                <td>50%</td>
+                                <td>Media</td>
+                                <td><span class="badge">Públicas</span></td>
+                            </tr>
+                            <tr class="needs-improvement">
+                                <td><strong>📈 Mejora</strong></td>
+                                <td class="score needs-improvement">&lt;45</td>
+                                <td>25%-</td>
+                                <td>Preparación</td>
+                                <td><span class="badge">Mercado</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Interpretación para Negocio -->
+            <div class="section">
+                <div class="section-header interpretacion">
+                    <span class="icon-large">💼</span>
+                    Oportunidades de Negocio
+                </div>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>💡 Aspecto</th>
+                                <th>📊 Dato Clave</th>
+                                <th>🎯 Oportunidad</th>
+                                <th>💰 Potencial</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>📈 Mercado Potencial</strong></td>
+                                <td>41.7% en niveles 1 y 2</td>
+                                <td>Preparación básica e intermedia</td>
+                                <td><span class="badge">Alto volumen</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>⚖️ Equidad de Género</strong></td>
+                                <td>Brecha mínima: 0.5 puntos</td>
+                                <td>Mercado mixto sin sesgo</td>
+                                <td><span class="badge">Amplio alcance</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>🌾 Brecha Rural</strong></td>
+                                <td>5.2 puntos de diferencia</td>
+                                <td>Programas rurales especializados</td>
+                                <td><span class="badge">Nicho específico</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>🏫 Colegios Oficiales</strong></td>
+                                <td>5.2 puntos bajo privados</td>
+                                <td>Alianzas institucionales</td>
+                                <td><span class="badge">B2B masivo</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>📊 Estabilidad del Área</strong></td>
+                                <td>Menor volatilidad</td>
+                                <td>Metodologías consistentes</td>
+                                <td><span class="badge">Baja competencia</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Animación de las barras de progreso
+        document.addEventListener('DOMContentLoaded', function() {
+            const progressBars = document.querySelectorAll('.progress-fill');
+            progressBars.forEach((bar, index) => {
+                setTimeout(() => {
+                    bar.style.width = bar.style.width;
+                }, index * 100);
+            });
+        });
+
+        // Efecto hover en las filas
+        const rows = document.querySelectorAll('.year-row');
+        rows.forEach(row => {
+            row.addEventListener('mouseenter', function() {
+                this.style.boxShadow = '0 5px 15px rgba(0,0,0,0.1)';
+            });
+            
+            row.addEventListener('mouseleave', function() {
+                this.style.boxShadow = 'none';
+            });
+        });
+    </script>
+</body>
+</html>
